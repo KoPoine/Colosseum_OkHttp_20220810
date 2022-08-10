@@ -27,7 +27,24 @@ class LoginActivity : BaseActivity() {
             val inputEmail = binding.emailEdt.text.toString()
             val inputPw = binding.passwordEdt.text.toString()
 
-            ServerUtil.postRequestLogin(inputEmail, inputPw)
+            ServerUtil.postRequestLogin(inputEmail, inputPw, object : ServerUtil.JsonResponseHandler{
+                override fun onResponse(jsonObj: JSONObject) {
+
+//                    UI 입장에서, 로그인 결과를 받아서 처리할 코드
+//                    서버에 다녀오고 나서 실행 : OkHttp 라이브러리가 자동으로 백그라운드에서 돌도록 만들어둔 코드
+                    val code = jsonObj.getInt("code")
+                    val message = jsonObj.getString("message")
+
+                    if (code == 200) {
+
+                    }
+                    else {
+                        runOnUiThread {
+                            Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            })
 
 //            서버에 Request를 보내는 로직 (예시)
 //            val url = "http://54.180.52.26/user"
