@@ -1,14 +1,12 @@
 package com.neppplus.colosseum_okhttp_20220810
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.neppplus.colosseum_okhttp_20220810.databinding.ActivityLoginBinding
 import com.neppplus.colosseum_okhttp_20220810.utils.ServerUtil
-import okhttp3.*
 import org.json.JSONObject
-import java.io.IOException
 
 class LoginActivity : BaseActivity() {
 
@@ -82,6 +80,11 @@ class LoginActivity : BaseActivity() {
 //                }
 //            })
 
+        }
+
+        binding.signUpBtn.setOnClickListener {
+            val myIntent = Intent(mContext, SignUpActivity::class.java)
+            startActivity(myIntent)
         }
     }
 
