@@ -21,12 +21,15 @@ class ServerUtil {
     companion object {
 //        로그인 기능 호출 함수
 
+//        서버 컴퓨터 주소만 변수로 저장 (관리 일원화) => 외부 노출 X
+        private val BASE_URL = "https://54.180.52.26"
+
         fun postRequestLogin(email : String, pw : String, handler : JsonResponseHandler?) {
 
 //            Request 제작 -> 실제 호출 -> 서버의 응답을 화면 전달
 
 //            1) 어느 주소 (url)로 접근 할지? => 서버 주소 + 기능 주소
-            val urlString = "http://54.180.52.26/user"
+            val urlString = "${BASE_URL}/user"
 
 //            2) 파라미터 담아두기 => Map구조를 통해서 어떤 이름표에 어느 공간에
             val formData = FormBody.Builder()
@@ -98,7 +101,9 @@ class ServerUtil {
 
         }
 
-
+        fun putRequestSignUp() {
+            val urlString = "${BASE_URL}/user"
+        }
     }
 
 }
