@@ -104,7 +104,6 @@ class ServerUtil {
         }
 
 //        중복 검사
-
         fun getRequestUserCheck(type : String, value : String, handler: JsonResponseHandler?) {
 
 //            QueryParameter는 Url에 노출 => 기본 url + query Data를 담아서 url을 제작 필요
@@ -139,6 +138,8 @@ class ServerUtil {
                 }
             })
         }
+
+
     }
 
 }

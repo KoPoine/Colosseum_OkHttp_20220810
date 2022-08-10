@@ -1,6 +1,7 @@
 package com.neppplus.colosseum_okhttp_20220810
 
 import android.os.Bundle
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import com.neppplus.colosseum_okhttp_20220810.databinding.ActivitySignUpBinding
 import com.neppplus.colosseum_okhttp_20220810.utils.ServerUtil
@@ -20,26 +21,15 @@ class SignUpActivity : BaseActivity() {
     override fun setupEvents() {
 
         binding.emailDupBtn.setOnClickListener {
+            val inputEmail = binding.emailEdt.text.toString()
 
+            checkDuplicate("EMAIL", inputEmail, binding.emailDupTxt)
         }
 
         binding.nickDupBtn.setOnClickListener {
             val inputNick = binding.nickEdt.text.toString()
 
-            ServerUtil.getRequestUserCheck(
-                "NICK_NAME",
-                inputNick,
-                object : ServerUtil.JsonResponseHandler{
-                    override fun onResponse(jsonObj: JSONObject) {
-                        val code = jsonObj.getInt("code")
-                        val message = jsonObj.getString("message")
-
-                        runOnUiThread {
-                            binding.nickDupTxt.text = message
-                        }
-                    }
-                }
-            )
+            checkDuplicate("Nick_NAME", inputNick, binding.emailDupTxt)
         }
 
         binding.signUpBtn.setOnClickListener {  }
@@ -47,5 +37,18 @@ class SignUpActivity : BaseActivity() {
 
     override fun setValues() {
 
+    }
+
+    fun checkDuplicate (type : String, value : String, textView : TextView) {
+        ServerUtil.getRequestUserCheck(type, value, object : ServerUtil.JsonResponseHandler{
+            override fun onResponse(jsonObj: JSONObject) {
+                val code = jsonObj.getInt("code")
+                val message = jsonObj.getString("message")
+
+                runOnUiThread {
+                    textView.text = message
+                }
+            }
+        })
     }
 }
