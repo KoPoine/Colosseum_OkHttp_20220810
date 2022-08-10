@@ -18,7 +18,12 @@ class LoginActivity : BaseActivity() {
 
 
     override fun setupEvents() {
+        binding.loginBtn.setOnClickListener {
+            val inputEmail = binding.emailEdt.text.toString()
+            val inputPw = binding.passwordEdt.text.toString()
 
+//            서버에 Request를 보내는 로직
+        }
     }
 
     override fun setValues() {
