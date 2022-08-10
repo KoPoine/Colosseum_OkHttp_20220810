@@ -1,5 +1,6 @@
 package com.neppplus.colosseum_okhttp_20220810
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -106,6 +107,6 @@ class LoginActivity : BaseActivity() {
     }
 
     override fun setValues() {
-
+        binding.autoLoginCb.isChecked = ContextUtil.getAutoLogin(mContext)
     }
 }

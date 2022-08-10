@@ -32,6 +32,12 @@ class ContextUtil {
             val pref = context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
             return pref.getBoolean(AUTO_LOGIN, false)
         }
+
+//        SharedPreferences에 적힌 모든 변수 초기화(삭제)
+        fun clear( context: Context ) {
+            val pref = context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
+            pref.edit().clear().apply()
+        }
     }
 
 }
