@@ -44,6 +44,8 @@ class LoginActivity : BaseActivity() {
 
                         ContextUtil.setLoginToken(mContext, token)
 
+                        ContextUtil.setAutoLogin(mContext, binding.autoLoginCb.isChecked)
+
                         runOnUiThread {
                             Toast.makeText(mContext, "${nickname}님 환영합니다.", Toast.LENGTH_SHORT).show()
                             val myIntent = Intent(mContext, MainActivity::class.java)

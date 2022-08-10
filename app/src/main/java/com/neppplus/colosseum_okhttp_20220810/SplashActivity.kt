@@ -42,7 +42,7 @@ class SplashActivity : BaseActivity() {
         myHandler.postDelayed(
             {
 //            1. 실제로 유저가 자동로그인에 체크를 하였는가?
-                val isAutoLoginOk = false
+                val isAutoLoginOk = ContextUtil.getAutoLogin(mContext)
 
 //            2. 유저의 자동로그인 정보는 확실한가(서버와 통신)?
                 if (isAutoLoginOk && isTokenOk) {

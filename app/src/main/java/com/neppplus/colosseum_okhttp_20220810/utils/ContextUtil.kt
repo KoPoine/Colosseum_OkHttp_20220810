@@ -8,6 +8,7 @@ class ContextUtil {
         val prefName = "Colosseum_Pref"
 
         val LOGIN_TOKEN = "LOGIN_TOKEN"
+        val AUTO_LOGIN = "AUTO_LOGIN"
 
         fun setLoginToken (context : Context, token : String) {
 //            메모장을 만들어준다.
@@ -20,6 +21,16 @@ class ContextUtil {
         fun getLoginToken (context: Context) : String {
             val pref = context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
             return pref.getString(LOGIN_TOKEN, "")!!
+        }
+
+        fun setAutoLogin (context: Context, isAuto : Boolean) {
+            val pref = context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
+            pref.edit().putBoolean(AUTO_LOGIN, isAuto).apply()
+        }
+
+        fun getAutoLogin (context: Context) : Boolean {
+            val pref = context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
+            return pref.getBoolean(AUTO_LOGIN, false)
         }
     }
 
