@@ -6,6 +6,10 @@ plugins {
 android {
     compileSdk 32
 
+    buildFeatures{
+        dataBinding = true
+    }
+
     defaultConfig {
         applicationId "com.neppplus.colosseum_okhttp_20220810"
         minSdk 22
