@@ -2,9 +2,11 @@ package com.neppplus.colosseum_okhttp_20220810
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.neppplus.colosseum_okhttp_20220810.databinding.ActivityLoginBinding
+import com.neppplus.colosseum_okhttp_20220810.utils.ContextUtil
 import com.neppplus.colosseum_okhttp_20220810.utils.ServerUtil
 import org.json.JSONObject
 
@@ -38,6 +40,10 @@ class LoginActivity : BaseActivity() {
                         val dataObj = jsonObj.getJSONObject("data")
                         val userObj = dataObj.getJSONObject("user")
                         val nickname = userObj.getString("nick_name")
+                        val token = dataObj.getString("token")
+
+                        ContextUtil.setLoginToken(mContext, token)
+
                         runOnUiThread {
                             Toast.makeText(mContext, "${nickname}님 환영합니다.", Toast.LENGTH_SHORT).show()
                             val myIntent = Intent(mContext, MainActivity::class.java)
