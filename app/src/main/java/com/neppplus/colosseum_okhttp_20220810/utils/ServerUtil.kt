@@ -3,6 +3,7 @@ package com.neppplus.colosseum_okhttp_20220810.utils
 import android.util.Log
 import android.widget.Toast
 import okhttp3.*
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.json.JSONObject
 import java.io.IOException
 
@@ -22,8 +23,9 @@ class ServerUtil {
 //        로그인 기능 호출 함수
 
 //        서버 컴퓨터 주소만 변수로 저장 (관리 일원화) => 외부 노출 X
-        private val BASE_URL = "https://54.180.52.26"
+        private val BASE_URL = "http://54.180.52.26"
 
+//        로그인
         fun postRequestLogin(email : String, pw : String, handler : JsonResponseHandler?) {
 
 //            Request 제작 -> 실제 호출 -> 서버의 응답을 화면 전달
@@ -101,8 +103,41 @@ class ServerUtil {
 
         }
 
-        fun putRequestSignUp() {
-            val urlString = "${BASE_URL}/user"
+//        중복 검사
+
+        fun getRequestUserCheck(type : String, value : String, handler: JsonResponseHandler?) {
+
+//            QueryParameter는 Url에 노출 => 기본 url + query Data를 담아서 url을 제작 필요
+            val urlBuilder = "${BASE_URL}/user_check".toHttpUrlOrNull()!!.newBuilder()
+                .addEncodedQueryParameter("type", type)
+                .addEncodedQueryParameter("value", value)
+                .build()
+
+            val urlString = urlBuilder.toString()
+
+            Log.d("완성된 Url", urlString)
+
+            val request = Request.Builder()
+                .url(urlString)
+                .get()
+                .build()
+
+            val client = OkHttpClient()
+
+            client.newCall(request).enqueue(object : Callback{
+                override fun onFailure(call: Call, e: IOException) {
+                    Log.e("error", e.toString())
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val bodyString = response.body!!.string()
+                    val jsonObj = JSONObject(bodyString)
+
+                    Log.d("서버응답", jsonObj.toString())
+
+                    handler?.onResponse(jsonObj)
+                }
+            })
         }
     }
 
