@@ -4,6 +4,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
@@ -105,6 +108,12 @@ class MainActivity : BaseActivity() {
 //        Toolbar 찾는다 > 우리의 액션바의 부모 > Androidx에서 제공하는 Toolbar 형 변환
         val myToolbar = defaultActionBar.customView.parent as Toolbar
         myToolbar.setContentInsetsAbsolute(0,0)
+
+        val backIcon = defaultActionBar.customView.findViewById<ImageView>(R.id.backIcon)
+        val titleTxt = defaultActionBar.customView.findViewById<TextView>(R.id.titleTxt)
+        val profileIcon = defaultActionBar.customView.findViewById<ImageView>(R.id.profileIcon)
+
+        profileIcon.visibility = View.VISIBLE
     }
 
 }
