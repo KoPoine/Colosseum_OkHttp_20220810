@@ -64,13 +64,17 @@ class MainActivity : BaseActivity() {
 
                     Log.d("받아낸 주제", topicObj.toString())
 
-                    val topicData = TopicData()
+//                    val topicData = TopicData()
+//
+//                    topicData.id = topicObj.getInt("id")
+//                    topicData.title = topicObj.getString("title")
+//                    topicData.imageUrl = topicObj.getString("img_url")
+//                    topicData.replyCount = topicObj.getInt("reply_count")
 
-                    topicData.id = topicObj.getInt("id")
-                    topicData.title = topicObj.getString("title")
-                    topicData.imageUrl = topicObj.getString("img_url")
-                    topicData.replyCount = topicObj.getInt("reply_count")
+//                    TopicData 변수를 생성 => companion Obj 활용 > topicData를 뽑아오는 로직
+                    val topicData = TopicData.getTopicDataFromJson(topicObj)
 
+//                    뽑아낸 topicData를 ArrayList에 추가
                     mTopicList.add(topicData)
 
                     runOnUiThread {
