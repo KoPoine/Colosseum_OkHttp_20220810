@@ -1,6 +1,7 @@
 package com.neppplus.colosseum_okhttp_20220810
 
 import android.os.Bundle
+import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
@@ -83,7 +84,8 @@ class SignUpActivity : BaseActivity() {
     }
 
     override fun setValues() {
-
+        titleTxt.text = "회원 가입"
+        backIcon.visibility = View.VISIBLE
     }
 
     fun checkDuplicate (type : String, value : String, textView : TextView) {

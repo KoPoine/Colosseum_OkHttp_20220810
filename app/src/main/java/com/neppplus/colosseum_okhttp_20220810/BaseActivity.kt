@@ -45,5 +45,9 @@ abstract class BaseActivity : AppCompatActivity() {
         backIcon = defaultActionBar.customView.findViewById(R.id.backIcon)
         titleTxt = defaultActionBar.customView.findViewById(R.id.titleTxt)
         profileIcon = defaultActionBar.customView.findViewById(R.id.profileIcon)
+
+        backIcon.setOnClickListener {
+            finish()
+        }
     }
 }
