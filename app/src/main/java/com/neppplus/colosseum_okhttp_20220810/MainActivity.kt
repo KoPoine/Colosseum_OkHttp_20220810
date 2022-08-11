@@ -64,6 +64,21 @@ class MainActivity : BaseActivity() {
 
                     Log.d("받아낸 주제", topicObj.toString())
 
+                    val topicData = TopicData()
+
+                    topicData.id = topicObj.getInt("id")
+                    topicData.title = topicObj.getString("title")
+                    topicData.imageUrl = topicObj.getString("img_url")
+                    topicData.replyCount = topicObj.getInt("reply_count")
+
+                    mTopicList.add(topicData)
+
+                    runOnUiThread {
+//                        mTopicList에 한개의 topicData를 넣는것보다 (서버통신)
+//                        mTopicAdapter를 먼저 객체화 한 경우를 대비해서
+                        mTopicAdapter.notifyDataSetChanged()
+                    }
+
                 }
             }
         })
