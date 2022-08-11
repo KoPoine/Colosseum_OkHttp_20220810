@@ -1,12 +1,14 @@
 package com.neppplus.colosseum_okhttp_20220810
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.neppplus.colosseum_okhttp_20220810.adapters.ReplyRecyclerAdapter
 import com.neppplus.colosseum_okhttp_20220810.databinding.ActivityDetailTopicBinding
+import com.neppplus.colosseum_okhttp_20220810.datas.ReplyData
 import com.neppplus.colosseum_okhttp_20220810.datas.TopicData
 import com.neppplus.colosseum_okhttp_20220810.utils.ContextUtil
 import com.neppplus.colosseum_okhttp_20220810.utils.ServerUtil
@@ -16,7 +18,10 @@ class DetailTopicActivity : BaseActivity() {
 
     lateinit var binding : ActivityDetailTopicBinding
 
-    lateinit var topicData : TopicData
+    lateinit var mTopicData : TopicData
+
+    lateinit var mReplyAdapter : ReplyRecyclerAdapter
+    val mReplyList = ArrayList<ReplyData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,30 +32,69 @@ class DetailTopicActivity : BaseActivity() {
 
     override fun setupEvents() {
         binding.vote1Btn.setOnClickListener {
-            voteTopic(topicData.sideList[0].id)
+            voteTopic(mTopicData.sideList[0].id)
         }
 
         binding.vote2Btn.setOnClickListener {
-            voteTopic(topicData.sideList[1].id)
+            voteTopic(mTopicData.sideList[1].id)
         }
     }
 
     override fun setValues() {
-        topicData = intent.getSerializableExtra("topicData") as TopicData
+        mTopicData = intent.getSerializableExtra("topicData") as TopicData
 
         backIcon.visibility = View.VISIBLE
 
+        getTopicDetailFromServer()
+
         setUiFromData()
+
+        mReplyAdapter = ReplyRecyclerAdapter(mContext, mReplyList)
+        binding.replyRecyclerView.adapter = mReplyAdapter
+        binding.replyRecyclerView.layoutManager = LinearLayoutManager(mContext)
+    }
+
+    fun getTopicDetailFromServer() {
+        val token = ContextUtil.getLoginToken(mContext)
+        ServerUtil.getRequestTopicDetail(token, mTopicData.id, "NEW", object : ServerUtil.JsonResponseHandler{
+            override fun onResponse(jsonObj: JSONObject) {
+//                토픽 데이터부터 파싱
+                val dataObj = jsonObj.getJSONObject("data")
+                val topicObj = dataObj.getJSONObject("topic")
+
+                val topicData = TopicData.getTopicDataFromJson(topicObj)
+
+                mTopicData = topicData
+
+                runOnUiThread {
+                    setUiFromData()
+                }
+//                댓글 목록도 별도로 파싱
+                mReplyList.clear()
+
+                val repliesArr = topicObj.getJSONArray("replies")
+                for (i in 0 until repliesArr.length()) {
+                    val replyObj = repliesArr.getJSONObject(i)
+
+                    val replyData = ReplyData.getReplyDataFromJson(replyObj)
+
+                    mReplyList.add(replyData)
+                }
+                runOnUiThread {
+                    mReplyAdapter.notifyDataSetChanged()
+                }
+            }
+        })
     }
 
     fun setUiFromData() {
-        Glide.with(mContext).load(topicData.imageUrl).into(binding.backgroundImg)
+        Glide.with(mContext).load(mTopicData.imageUrl).into(binding.backgroundImg)
 
-        binding.side1Txt.text = topicData.sideList[0].title
-        binding.vote1CountTxt.text = "${topicData.sideList[0].voteCount}표"
+        binding.side1Txt.text = mTopicData.sideList[0].title
+        binding.vote1CountTxt.text = "${mTopicData.sideList[0].voteCount}표"
 
-        binding.side2Txt.text = topicData.sideList[1].title
-        binding.vote2CountTxt.text = "${topicData.sideList[1].voteCount}표"
+        binding.side2Txt.text = mTopicData.sideList[1].title
+        binding.vote2CountTxt.text = "${mTopicData.sideList[1].voteCount}표"
     }
 
     fun voteTopic(sideId : Int) {
@@ -63,7 +107,7 @@ class DetailTopicActivity : BaseActivity() {
                     val dataObj = jsonObj.getJSONObject("data")
                     val topicObj = dataObj.getJSONObject("topic")
 
-                    topicData = TopicData.getTopicDataFromJson(topicObj)
+                    mTopicData = TopicData.getTopicDataFromJson(topicObj)
 
 //                    UI에 변경된 내용을 반영
                     runOnUiThread {
