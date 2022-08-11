@@ -203,6 +203,7 @@ class ServerUtil {
             })
         }
 
+//        메인 정보 불러오기
         fun getRequestMainInfo(token: String, handler: JsonResponseHandler?) {
             val urlString = "${BASE_URL}/v2/main_info"
 
@@ -226,6 +227,38 @@ class ServerUtil {
                 }
             })
         }
-    }
 
+        //    닉네임 / 비밀번호 변경 Event
+        fun patchRequestChangeProfile(token: String, nick : String, handler: JsonResponseHandler?) {
+            val urlString = "${BASE_URL}/user"
+
+            val formBody = FormBody.Builder()
+                .add("nick_name", nick)
+                .build()
+
+            val request = Request.Builder()
+                .header("X-Http-Token", token)
+                .url(urlString)
+                .patch(formBody)
+                .build()
+
+            val client = OkHttpClient()
+
+            client.newCall(request).enqueue(object : Callback{
+                override fun onFailure(call: Call, e: IOException) {
+
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+
+                    val jsonObj = JSONObject(response.body!!.string())
+                    Log.d("회원정보수정응답", jsonObj.toString())
+                    handler?.onResponse(jsonObj)
+
+                }
+            })
+        }
+
+
+    }
 }

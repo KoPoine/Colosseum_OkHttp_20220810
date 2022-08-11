@@ -10,7 +10,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import com.neppplus.colosseum_okhttp_20220810.databinding.ActivityProfileBinding
+import com.neppplus.colosseum_okhttp_20220810.datas.UserData
+import com.neppplus.colosseum_okhttp_20220810.utils.ContextUtil
 import com.neppplus.colosseum_okhttp_20220810.utils.GlobalData
+import com.neppplus.colosseum_okhttp_20220810.utils.ServerUtil
+import org.json.JSONObject
 
 class ProfileActivity : BaseActivity() {
 
@@ -37,7 +41,7 @@ class ProfileActivity : BaseActivity() {
 //                    서버에 사용자가 작성한 nickname으로 변경 이벤트 처리
                     val inputNick = inputNickEdt.text.toString()
 
-
+                    changeUserData(inputNick)
                 })
                 .setNegativeButton("취소", null)
                 .show()
@@ -51,5 +55,31 @@ class ProfileActivity : BaseActivity() {
         binding.nickTxt.text = GlobalData.loginUser!!.nick
 
         backIcon.visibility = View.VISIBLE
+    }
+
+    fun changeUserData(nick : String) {
+        val token = ContextUtil.getLoginToken(mContext)
+        ServerUtil.patchRequestChangeProfile(token, nick, object : ServerUtil.JsonResponseHandler{
+            override fun onResponse(jsonObj: JSONObject) {
+                val code = jsonObj.getInt("code")
+                val message = jsonObj.getString("message")
+                if (code == 200) {
+                    val dataObj = jsonObj.getJSONObject("data")
+                    val userObj = dataObj.getJSONObject("user")
+                    GlobalData.loginUser = UserData.getUserDataFromJson(userObj)
+
+                    runOnUiThread {
+                        Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show()
+
+                        binding.nickTxt.text = GlobalData.loginUser!!.nick
+                    }
+                }
+                else {
+                    runOnUiThread {
+                        Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        })
     }
 }
