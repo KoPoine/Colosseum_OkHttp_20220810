@@ -229,17 +229,33 @@ class ServerUtil {
         }
 
         //    닉네임 / 비밀번호 변경 Event
-        fun patchRequestChangeProfile(token: String, nick : String, handler: JsonResponseHandler?) {
+        fun patchRequestChangeProfile(
+            token: String,
+            currentPw : String?,
+            newPw : String?,
+            nick : String?,
+            handler: JsonResponseHandler?) {
             val urlString = "${BASE_URL}/user"
 
             val formBody = FormBody.Builder()
-                .add("nick_name", nick)
-                .build()
+
+            if (currentPw != null) {
+                formBody
+                    .add("current_password", currentPw.toString())
+                    .add("new_password", newPw.toString())
+            }
+
+            if (nick != null) {
+                formBody.add("nick_name", nick.toString())
+            }
+
+            val formData = formBody.build()
+
 
             val request = Request.Builder()
                 .header("X-Http-Token", token)
                 .url(urlString)
-                .patch(formBody)
+                .patch(formData)
                 .build()
 
             val client = OkHttpClient()

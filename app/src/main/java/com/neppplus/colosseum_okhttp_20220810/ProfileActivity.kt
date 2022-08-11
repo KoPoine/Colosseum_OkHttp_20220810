@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import com.neppplus.colosseum_okhttp_20220810.databinding.ActivityProfileBinding
 import com.neppplus.colosseum_okhttp_20220810.datas.UserData
@@ -41,12 +42,29 @@ class ProfileActivity : BaseActivity() {
 //                    서버에 사용자가 작성한 nickname으로 변경 이벤트 처리
                     val inputNick = inputNickEdt.text.toString()
 
-                    changeUserData(inputNick)
+                    changeUserData(null, null, inputNick)
                 })
                 .setNegativeButton("취소", null)
                 .show()
 
 
+        }
+
+//        비밀번호 변경 EditText 입력시 현재 비밀번호 입력 Layout visibility 변경
+        binding.inputPwEdt.addTextChangedListener {
+            if (it.toString().isNotBlank()) {
+                binding.changePwLayout.visibility = View.VISIBLE
+            }
+            else {
+                binding.changePwLayout.visibility = View.GONE
+            }
+        }
+
+        binding.changePwBtn.setOnClickListener {
+            val currentPw = binding.currentEdt.text.toString()
+            val inputPw = binding.inputPwEdt.text.toString()
+
+            changeUserData(currentPw, inputPw, null)
         }
     }
 
@@ -57,19 +75,29 @@ class ProfileActivity : BaseActivity() {
         backIcon.visibility = View.VISIBLE
     }
 
-    fun changeUserData(nick : String) {
+    fun changeUserData(currentPw : String?, newPw : String?, nick : String?) {
         val token = ContextUtil.getLoginToken(mContext)
-        ServerUtil.patchRequestChangeProfile(token, nick, object : ServerUtil.JsonResponseHandler{
+        ServerUtil.patchRequestChangeProfile(
+            token, currentPw, newPw, nick, object : ServerUtil.JsonResponseHandler{
             override fun onResponse(jsonObj: JSONObject) {
                 val code = jsonObj.getInt("code")
                 val message = jsonObj.getString("message")
                 if (code == 200) {
                     val dataObj = jsonObj.getJSONObject("data")
                     val userObj = dataObj.getJSONObject("user")
+                    val token = dataObj.getString("token")
                     GlobalData.loginUser = UserData.getUserDataFromJson(userObj)
+
+                    ContextUtil.setLoginToken(mContext, token)
 
                     runOnUiThread {
                         Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show()
+
+                        binding.changePwLayout.visibility = View.GONE
+
+                        binding.currentEdt.setText("")
+
+                        binding.inputPwEdt.setText("")
 
                         binding.nickTxt.text = GlobalData.loginUser!!.nick
                     }
@@ -77,6 +105,8 @@ class ProfileActivity : BaseActivity() {
                 else {
                     runOnUiThread {
                         Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show()
+
+//                        [도전과제] 비밀번호 변경시 message를 EditText 아래쪽에 있는 textView에 배치
                     }
                 }
             }
