@@ -43,9 +43,16 @@ class MainActivity : BaseActivity() {
             startActivity(myIntent)
             finish()
         }
+
+//        내 정보 화면으로 이동 (커스텀 액션바의 icon 클릭이벤트 활용)
+        profileIcon.setOnClickListener {
+            val myIntent = Intent()
+        }
     }
 
     override fun setValues() {
+        profileIcon.visibility = View.VISIBLE
+
         getTopicListFromServer()
 
         mTopicAdapter = TopicRecyclerAdapter(mContext, mTopicList)

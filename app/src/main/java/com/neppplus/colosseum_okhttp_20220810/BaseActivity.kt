@@ -14,6 +14,10 @@ abstract class BaseActivity : AppCompatActivity() {
 
     lateinit var mContext : Context
 
+    lateinit var backIcon : ImageView
+    lateinit var titleTxt : TextView
+    lateinit var profileIcon : ImageView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mContext = this
@@ -38,10 +42,8 @@ abstract class BaseActivity : AppCompatActivity() {
         val myToolbar = defaultActionBar.customView.parent as Toolbar
         myToolbar.setContentInsetsAbsolute(0,0)
 
-        val backIcon = defaultActionBar.customView.findViewById<ImageView>(R.id.backIcon)
-        val titleTxt = defaultActionBar.customView.findViewById<TextView>(R.id.titleTxt)
-        val profileIcon = defaultActionBar.customView.findViewById<ImageView>(R.id.profileIcon)
-
-        profileIcon.visibility = View.VISIBLE
+        backIcon = defaultActionBar.customView.findViewById(R.id.backIcon)
+        titleTxt = defaultActionBar.customView.findViewById(R.id.titleTxt)
+        profileIcon = defaultActionBar.customView.findViewById(R.id.profileIcon)
     }
 }
