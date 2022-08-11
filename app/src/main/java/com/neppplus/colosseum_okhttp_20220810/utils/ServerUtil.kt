@@ -275,6 +275,7 @@ class ServerUtil {
             })
         }
 
+//        회원탈퇴기능
         fun deleteRequestDeleteUser(token: String, text : String, handler: JsonResponseHandler?) {
             val urlBuilder = "${BASE_URL}/user".toHttpUrlOrNull()!!.newBuilder()
                 .addEncodedQueryParameter("text", text)
@@ -298,6 +299,36 @@ class ServerUtil {
                 override fun onResponse(call: Call, response: Response) {
                     val jsonObj = JSONObject(response.body!!.string())
                     Log.d("회원탈퇴 서버 응답", jsonObj.toString())
+                    handler?.onResponse(jsonObj)
+                }
+            })
+        }
+
+//        진영 투표
+
+        fun postRequestVoteTopic(token : String, sideId : Int, handler: JsonResponseHandler?) {
+            val urlString = "${BASE_URL}/topic_vote"
+
+            val formBody = FormBody.Builder()
+                .add("side_id", sideId.toString())
+                .build()
+
+            val request = Request.Builder()
+                .header("X-Http-Token", token)
+                .url(urlString)
+                .post(formBody)
+                .build()
+
+            val client = OkHttpClient()
+
+            client.newCall(request).enqueue(object : Callback{
+                override fun onFailure(call: Call, e: IOException) {
+
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val jsonObj = JSONObject(response.body!!.string())
+                    Log.d("진영 투표 서버 응답", jsonObj.toString())
                     handler?.onResponse(jsonObj)
                 }
             })
