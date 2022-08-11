@@ -5,7 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.neppplus.colosseum_okhttp_20220810.adapters.TopicRecyclerAdapter
 import com.neppplus.colosseum_okhttp_20220810.databinding.ActivityMainBinding
+import com.neppplus.colosseum_okhttp_20220810.datas.TopicData
 import com.neppplus.colosseum_okhttp_20220810.utils.ContextUtil
 import com.neppplus.colosseum_okhttp_20220810.utils.ServerUtil
 import org.json.JSONObject
@@ -13,6 +16,9 @@ import org.json.JSONObject
 class MainActivity : BaseActivity() {
 
     lateinit var binding : ActivityMainBinding
+
+    val mTopicList = ArrayList<TopicData>()
+    lateinit var mTopicAdapter : TopicRecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +42,10 @@ class MainActivity : BaseActivity() {
 
     override fun setValues() {
         getTopicListFromServer()
+
+        mTopicAdapter = TopicRecyclerAdapter(mContext, mTopicList)
+        binding.topicRecyclerView.adapter = mTopicAdapter
+        binding.topicRecyclerView.layoutManager = LinearLayoutManager(mContext)
     }
 
     fun getTopicListFromServer() {
