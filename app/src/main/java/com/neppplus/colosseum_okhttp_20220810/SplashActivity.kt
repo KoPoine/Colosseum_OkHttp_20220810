@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import com.neppplus.colosseum_okhttp_20220810.datas.UserData
 import com.neppplus.colosseum_okhttp_20220810.utils.ContextUtil
+import com.neppplus.colosseum_okhttp_20220810.utils.GlobalData
 import com.neppplus.colosseum_okhttp_20220810.utils.ServerUtil
 import org.json.JSONObject
 
@@ -29,6 +31,10 @@ class SplashActivity : BaseActivity() {
                 val code = jsonObj.getInt("code")
                 if (code == 200) {
                     isTokenOk = true
+                    val dataObj = jsonObj.getJSONObject("data")
+                    val userObj = dataObj.getJSONObject("user")
+
+                    GlobalData.loginUser = UserData.getUserDataFromJson(userObj)
                 }
             }
         })

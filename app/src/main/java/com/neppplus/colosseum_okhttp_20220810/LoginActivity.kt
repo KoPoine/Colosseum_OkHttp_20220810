@@ -7,7 +7,9 @@ import android.util.Log
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.neppplus.colosseum_okhttp_20220810.databinding.ActivityLoginBinding
+import com.neppplus.colosseum_okhttp_20220810.datas.UserData
 import com.neppplus.colosseum_okhttp_20220810.utils.ContextUtil
+import com.neppplus.colosseum_okhttp_20220810.utils.GlobalData
 import com.neppplus.colosseum_okhttp_20220810.utils.ServerUtil
 import org.json.JSONObject
 
@@ -40,15 +42,16 @@ class LoginActivity : BaseActivity() {
 //                        로그인 성공
                         val dataObj = jsonObj.getJSONObject("data")
                         val userObj = dataObj.getJSONObject("user")
-                        val nickname = userObj.getString("nick_name")
                         val token = dataObj.getString("token")
 
                         ContextUtil.setLoginToken(mContext, token)
 
                         ContextUtil.setAutoLogin(mContext, binding.autoLoginCb.isChecked)
 
+                        GlobalData.loginUser = UserData.getUserDataFromJson(userObj)
+
                         runOnUiThread {
-                            Toast.makeText(mContext, "${nickname}님 환영합니다.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(mContext, "${GlobalData.loginUser!!.nick}님 환영합니다.", Toast.LENGTH_SHORT).show()
                             val myIntent = Intent(mContext, MainActivity::class.java)
                             startActivity(myIntent)
                             finish()

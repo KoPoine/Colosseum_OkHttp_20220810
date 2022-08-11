@@ -15,6 +15,7 @@ import com.neppplus.colosseum_okhttp_20220810.adapters.TopicRecyclerAdapter
 import com.neppplus.colosseum_okhttp_20220810.databinding.ActivityMainBinding
 import com.neppplus.colosseum_okhttp_20220810.datas.TopicData
 import com.neppplus.colosseum_okhttp_20220810.utils.ContextUtil
+import com.neppplus.colosseum_okhttp_20220810.utils.GlobalData
 import com.neppplus.colosseum_okhttp_20220810.utils.ServerUtil
 import org.json.JSONObject
 
@@ -37,6 +38,8 @@ class MainActivity : BaseActivity() {
         binding.logoutBtn.setOnClickListener {
             ContextUtil.clear(mContext)
 
+            GlobalData.loginUser = null
+
 //            ContextUtil.setLoginToken(mContext, "")
 
             val myIntent = Intent(mContext, LoginActivity::class.java)
@@ -46,7 +49,8 @@ class MainActivity : BaseActivity() {
 
 //        내 정보 화면으로 이동 (커스텀 액션바의 icon 클릭이벤트 활용)
         profileIcon.setOnClickListener {
-            val myIntent = Intent()
+            val myIntent = Intent(mContext, ProfileActivity::class.java)
+            startActivity(myIntent)
         }
     }
 
