@@ -1,6 +1,7 @@
 package com.neppplus.colosseum_okhttp_20220810.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.neppplus.colosseum_okhttp_20220810.DetailTopicActivity
 import com.neppplus.colosseum_okhttp_20220810.R
 import com.neppplus.colosseum_okhttp_20220810.datas.TopicData
 
@@ -24,6 +26,12 @@ class TopicRecyclerAdapter(
             Glide.with(mContext).load(item.imageUrl).into(backgroundImg)
             titleTxt.text = item.title
             replyCountTxt.text = "현재 댓글 수 : ${item.replyCount}개"
+
+            itemView.setOnClickListener {
+                val myIntent = Intent(mContext, DetailTopicActivity::class.java)
+                myIntent.putExtra("topicData", item)
+                mContext.startActivity(myIntent)
+            }
         }
     }
 
