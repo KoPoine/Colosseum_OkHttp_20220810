@@ -6,8 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.neppplus.colosseum_okhttp_20220810.DetailTopicActivity
 import com.neppplus.colosseum_okhttp_20220810.R
 import com.neppplus.colosseum_okhttp_20220810.datas.ReplyData
+import com.neppplus.colosseum_okhttp_20220810.utils.ContextUtil
+import com.neppplus.colosseum_okhttp_20220810.utils.ServerUtil
+import org.json.JSONObject
 import org.w3c.dom.Text
 
 class ReplyRecyclerAdapter(
@@ -38,8 +42,38 @@ class ReplyRecyclerAdapter(
 //            1. drawable 생성 > red_border_box, blue_border_box
 
 //            2. myLike / myDisLike의 속성(Boolean값)에 따라 (좋아요 > red_border_box, 싫어요 > blue_border_box)
+            if (item.myLike) {
+                likeCountTxt.setBackgroundResource(R.drawable.red_border_box)
+            }
+            else {
+                likeCountTxt.setBackgroundResource(R.drawable.gray_border_box)
+            }
 
+            if (item.myDisLike) {
+                dislikeCountTxt.setBackgroundResource(R.drawable.blue_border_box)
+            }
+            else {
+                dislikeCountTxt.setBackgroundResource(R.drawable.gray_border_box)
+            }
 //            3. 클릭 이벤트를 통해서 그 댓글의 좋아요 싫어요에 대한 서버 응답을 작성
+
+            val token = ContextUtil.getLoginToken(mContext)
+
+            likeCountTxt.setOnClickListener {
+                ServerUtil.postRequestReplyLike(token, item.id, 1, object : ServerUtil.JsonResponseHandler{
+                    override fun onResponse(jsonObj: JSONObject) {
+                        (mContext as DetailTopicActivity).getTopicDetailFromServer()
+                    }
+                })
+            }
+
+            dislikeCountTxt.setOnClickListener {
+                ServerUtil.postRequestReplyLike(token, item.id, 0, object : ServerUtil.JsonResponseHandler{
+                    override fun onResponse(jsonObj: JSONObject) {
+                        (mContext as DetailTopicActivity).getTopicDetailFromServer()
+                    }
+                })
+            }
 
 //            hint. view의 backgroundResource변경 > view변수.setBackgroundResource(R.drawable.~~)
 
